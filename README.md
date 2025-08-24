@@ -19,12 +19,19 @@ This tool helps engineers and students analyze **ride frequency, damping, roll c
 ## 📂 Project Structure
 SuspensionCalc/
 │── client/ # React + Vite frontend
+
 │── server/ # Node.js backend (API + calculations)
+
 │── shared/ # Shared code (constants, utils)
+
 │── package.json # Root dependencies
+
 │── vite.config.ts # Vite config for frontend
+
 │── tailwind.config.ts
+
 │── tsconfig.json
+
 │── .gitignore
 
 yaml
