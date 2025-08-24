@@ -1,0 +1,99 @@
+"Build me a Suspension Calculator app with a clean, premium UI.
+Do not implement backend logic yet — just focus on UI, layout, and color theme with placeholder values in results."
+
+🔹 Inputs (group into tabs or collapsible panels):
+1. Vehicle Setup
+
+Vehicle mass (kg)
+
+Front/rear weight distribution (%) → slider
+
+Sprung mass fraction (0–1)
+
+CG height (m)
+
+Wheelbase (m)
+
+Front track width (m)
+
+Rear track width (m)
+
+2. Suspension Setup
+
+Front motion ratio
+
+Rear motion ratio
+
+Front ride frequency (Hz)
+
+Rear ride frequency (Hz)
+
+Front damping ratio (ζ)
+
+Rear damping ratio (ζ)
+
+Anti-roll bar stiffness front (Nm/rad)
+
+Anti-roll bar stiffness rear (Nm/rad)
+
+Unsprung mass front (kg/corner)
+
+Unsprung mass rear (kg/corner)
+
+3. Driving Scenarios
+
+Cornering lateral acceleration (g)
+
+Longitudinal acceleration (g, accel)
+
+Longitudinal deceleration (g, braking)
+
+Single-wheel bump travel (m)
+
+Single-wheel bump velocity (m/s)
+
+🔹 Outputs (Results Dashboard — use cards/grids):
+Springs & Damping: Spring rates, Wheel rates, Critical damping, Actual damping
+
+Ride & Roll: Ride frequencies, Roll stiffness (springs + ARB), Roll gradient, Roll stiffness distribution %
+
+Cornering: Lateral load transfer (front/rear, per tire), Tire vertical loads
+
+Longitudinal: Weight transfer under acceleration & braking
+
+Bump Response: Spring force, Damper force, Total wheel force
+
+🔹 UI Style Guidelines
+Layout:
+
+Use tabs or collapsible sections for inputs (Vehicle, Suspension, Scenarios).
+
+Show results in a dashboard with cards grouped by category.
+
+Premium Color Theme:
+
+Background: Deep charcoal / dark slate (#1E1E2F or similar)
+
+Cards: Soft dark gray with subtle shadows (#2A2A3B)
+
+Accent color: Muted teal or blue (#3AB4B8 or #4A90E2)
+
+Secondary highlight: Subtle amber or copper (#E3A14A) for important numbers
+
+Text: Off-white / light gray (#EDEDED) for body, pure white for headers
+
+Sliders/switches: Use teal/blue accent when active
+
+Typography:
+
+Use modern sans-serif font (Inter, Roboto, or similar).
+
+Headers: Bold, slightly larger.
+
+Body text: Light/medium weight, high contrast.
+
+General feel:
+
+Dark dashboard vibe like Figma/Notion Pro, not bright and not dull.
+
+Smooth animations for collapsibles & hover effects.
