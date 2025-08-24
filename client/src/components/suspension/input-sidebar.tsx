@@ -10,9 +10,10 @@ import { SuspensionInputs } from "@/types/suspension";
 interface InputSidebarProps {
   onCalculate: (data: SuspensionInputs) => void;
   isCalculating: boolean;
+  isMobile?: boolean;
 }
 
-export function InputSidebar({ onCalculate, isCalculating }: InputSidebarProps) {
+export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: InputSidebarProps) {
   const { register, handleSubmit, watch, setValue } = useForm<SuspensionInputs>({
     defaultValues: {
       vehicle: {
@@ -49,7 +50,7 @@ export function InputSidebar({ onCalculate, isCalculating }: InputSidebarProps) 
   const weightDistribution = watch("vehicle.weightDistribution");
 
   return (
-    <div className="w-80 bg-dark-secondary border-r border-dark-tertiary overflow-y-auto">
+    <div className={`${isMobile ? 'w-full' : 'w-80'} bg-dark-secondary ${!isMobile ? 'border-r border-dark-tertiary' : ''} overflow-y-auto`}>
       <div className="p-6">
         <h2 className="text-lg font-semibold text-text-primary mb-6" data-testid="title-input-parameters">
           Input Parameters
@@ -380,7 +381,7 @@ export function InputSidebar({ onCalculate, isCalculating }: InputSidebarProps) 
           <Button
             type="submit"
             disabled={isCalculating}
-            className="w-full py-3 bg-accent-teal text-text-primary rounded-lg font-medium hover:bg-opacity-80 transition-colors"
+            className="w-full py-3 bg-yellow-600 hover:bg-yellow-700 text-text-primary rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02]"
             data-testid="button-calculate-results"
           >
             {isCalculating ? (

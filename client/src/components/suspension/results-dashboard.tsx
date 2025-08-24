@@ -4,20 +4,39 @@ import { Activity, BarChart3, TrendingUp, ArrowLeftRight, Mountain, Target } fro
 
 interface ResultsDashboardProps {
   results: CalculationResults | null;
+  isMobile?: boolean;
+  onExportToWord?: () => void;
 }
 
-export function ResultsDashboard({ results }: ResultsDashboardProps) {
+export function ResultsDashboard({ results, isMobile = false, onExportToWord }: ResultsDashboardProps) {
   if (!results) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 bg-dark-primary">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-dark-primary">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-text-primary mb-8" data-testid="title-calculation-results">
-            Calculation Results
-          </h2>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8">
+            <h2 className="text-xl md:text-2xl font-bold text-text-primary mb-4 md:mb-0" data-testid="title-calculation-results">
+              Analysis Results
+            </h2>
+            {isMobile && onExportToWord && results && (
+              <button
+                onClick={onExportToWord}
+                className="px-4 py-2 bg-accent-blue text-text-primary rounded-lg hover:bg-opacity-80 transition-colors text-sm"
+                data-testid="button-mobile-export"
+              >
+                📄 Export Word
+              </button>
+            )}
+          </div>
           <div className="flex items-center justify-center h-64">
-            <p className="text-text-muted text-lg" data-testid="text-no-results">
-              Enter parameters and click "Calculate Results" to see suspension analysis
-            </p>
+            <div className="text-center">
+              <BarChart3 className="w-16 h-16 text-text-muted mx-auto mb-4" />
+              <p className="text-text-muted text-lg" data-testid="text-no-results">
+                Enter parameters and tap the <span className="text-yellow-500 font-semibold">Calculate</span> button
+              </p>
+              <p className="text-text-muted text-sm mt-2">
+                Your suspension analysis will appear here
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -25,13 +44,24 @@ export function ResultsDashboard({ results }: ResultsDashboardProps) {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 bg-dark-primary">
+    <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-dark-primary">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold text-text-primary mb-8" data-testid="title-calculation-results">
-          Calculation Results
-        </h2>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8">
+          <h2 className="text-xl md:text-2xl font-bold text-text-primary mb-4 md:mb-0" data-testid="title-calculation-results">
+            Analysis Results
+          </h2>
+          {isMobile && onExportToWord && (
+            <button
+              onClick={onExportToWord}
+              className="px-4 py-2 bg-accent-blue text-text-primary rounded-lg hover:bg-opacity-80 transition-colors text-sm"
+              data-testid="button-mobile-export"
+            >
+              📄 Export Word
+            </button>
+          )}
+        </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'lg:grid-cols-2 xl:grid-cols-3 gap-6'}`}>
           {/* Springs & Damping Card */}
           <ResultCard
             title="Springs & Damping"
