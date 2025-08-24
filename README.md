@@ -1,4 +1,4 @@
-🚗 Suspension Calculator Pro
+🚗 #Suspension Calculator Pro
 An advanced suspension dynamics calculator for ATVs and vehicles, built with React (Vite + Tailwind) frontend and a backend (Node/Express or Python) for calculations.
 
 This tool helps engineers and students analyze ride frequency, damping, roll compliance, bump compliance, and weight transfer, with color-coded performance summaries and exportable engineering reports.
