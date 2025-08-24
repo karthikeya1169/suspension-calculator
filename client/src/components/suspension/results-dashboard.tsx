@@ -1,6 +1,14 @@
 import { CalculationResults } from "@/types/suspension";
 import { ResultCard } from "./result-card";
-import { Activity, BarChart3, TrendingUp, ArrowLeftRight, Mountain, Target } from "lucide-react";
+import { Activity, BarChart3, TrendingUp, ArrowLeftRight, Mountain, Target, HelpCircle } from "lucide-react";
+import { 
+  gradeRideQualityScore, 
+  gradeHandlingBalance, 
+  gradeRollCompliance, 
+  gradeBumpCompliance, 
+  helpTexts 
+} from "@/lib/performance-helpers";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ResultsDashboardProps {
   results: CalculationResults | null;
@@ -130,7 +138,7 @@ export function ResultsDashboard({ results, isMobile = false, onExportToWord }: 
 
           {/* Cornering Card */}
           <ResultCard
-            title={`Cornering @ ${results.cornering.lateralAcceleration}g`}
+            title={`Cornering @ ${Number(results.cornering.lateralAcceleration).toFixed(1)}g`}
             icon={<TrendingUp className="text-accent-amber" size={20} />}
             accentColor="bg-accent-amber"
             items={[
@@ -241,29 +249,124 @@ export function ResultsDashboard({ results, isMobile = false, onExportToWord }: 
                 </h3>
               </div>
               <div className="space-y-3">
+                {/* Ride Quality Score */}
                 <div className="flex justify-between items-center">
-                  <span className="text-text-secondary" data-testid="label-ride-quality-score">Ride Quality Score</span>
-                  <span className="font-mono text-accent-teal text-lg font-semibold" data-testid="value-ride-quality-score">
-                    {results.performanceSummary.rideQualityScore}/10
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-text-secondary" data-testid="label-ride-quality-score">Ride Quality Score</span>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="w-4 h-4 text-text-muted hover:text-accent-teal cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs p-3">
+                        <div className="space-y-1">
+                          <p className="font-semibold">{helpTexts.rideQualityScore.title}</p>
+                          <p className="text-sm">{helpTexts.rideQualityScore.content}</p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-lg font-semibold" data-testid="value-ride-quality-score">
+                      {results.performanceSummary.rideQualityScore}/10
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      gradeRideQualityScore(results.performanceSummary.rideQualityScore).color
+                    } ${
+                      gradeRideQualityScore(results.performanceSummary.rideQualityScore).bgColor
+                    }`}>
+                      {gradeRideQualityScore(results.performanceSummary.rideQualityScore).label}
+                    </span>
+                  </div>
                 </div>
+                
+                {/* Handling Balance */}
                 <div className="flex justify-between items-center">
-                  <span className="text-text-secondary" data-testid="label-handling-balance">Handling Balance</span>
-                  <span className="font-mono text-accent-teal" data-testid="value-handling-balance">
-                    {results.performanceSummary.handlingBalance}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-text-secondary" data-testid="label-handling-balance">Handling Balance</span>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="w-4 h-4 text-text-muted hover:text-accent-teal cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs p-3">
+                        <div className="space-y-1">
+                          <p className="font-semibold">{helpTexts.handlingBalance.title}</p>
+                          <p className="text-sm">{helpTexts.handlingBalance.content}</p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono" data-testid="value-handling-balance">
+                      {results.performanceSummary.handlingBalance}
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      gradeHandlingBalance(results.performanceSummary.handlingBalance).color
+                    } ${
+                      gradeHandlingBalance(results.performanceSummary.handlingBalance).bgColor
+                    }`}>
+                      {gradeHandlingBalance(results.performanceSummary.handlingBalance).label}
+                    </span>
+                  </div>
                 </div>
+                
+                {/* Roll Compliance */}
                 <div className="flex justify-between items-center">
-                  <span className="text-text-secondary" data-testid="label-roll-compliance">Roll Compliance</span>
-                  <span className="font-mono text-text-secondary" data-testid="value-roll-compliance">
-                    {results.performanceSummary.rollCompliance}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-text-secondary" data-testid="label-roll-compliance">Roll Compliance</span>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="w-4 h-4 text-text-muted hover:text-accent-teal cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs p-3">
+                        <div className="space-y-1">
+                          <p className="font-semibold">{helpTexts.rollCompliance.title}</p>
+                          <p className="text-sm">{helpTexts.rollCompliance.content}</p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono" data-testid="value-roll-compliance">
+                      {results.performanceSummary.rollCompliance}
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      gradeRollCompliance(results.performanceSummary.rollCompliance).color
+                    } ${
+                      gradeRollCompliance(results.performanceSummary.rollCompliance).bgColor
+                    }`}>
+                      {gradeRollCompliance(results.performanceSummary.rollCompliance).label}
+                    </span>
+                  </div>
                 </div>
+                
+                {/* Bump Compliance */}
                 <div className="flex justify-between items-center">
-                  <span className="text-text-secondary" data-testid="label-bump-compliance">Bump Compliance</span>
-                  <span className="font-mono text-text-secondary" data-testid="value-bump-compliance">
-                    {results.performanceSummary.bumpCompliance}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-text-secondary" data-testid="label-bump-compliance">Bump Compliance</span>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="w-4 h-4 text-text-muted hover:text-accent-teal cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs p-3">
+                        <div className="space-y-1">
+                          <p className="font-semibold">{helpTexts.bumpCompliance.title}</p>
+                          <p className="text-sm">{helpTexts.bumpCompliance.content}</p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono" data-testid="value-bump-compliance">
+                      {results.performanceSummary.bumpCompliance}
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      gradeBumpCompliance(results.performanceSummary.bumpCompliance).color
+                    } ${
+                      gradeBumpCompliance(results.performanceSummary.bumpCompliance).bgColor
+                    }`}>
+                      {gradeBumpCompliance(results.performanceSummary.bumpCompliance).label}
+                    </span>
+                  </div>
                 </div>
                 <div className="bg-dark-tertiary rounded-lg p-3 mt-4">
                   <p className="text-sm text-text-muted" data-testid="text-recommendation">

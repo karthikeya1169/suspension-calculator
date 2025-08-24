@@ -299,7 +299,7 @@ export function calculateSuspension(inputs: SuspensionInputs): CalculationResult
       rollStiffnessDist: `${Math.round(frontRollPercent)}% F / ${Math.round(100 - frontRollPercent)}% R`
     },
     cornering: {
-      lateralAcceleration: scenarios.lateralAccel,
+      lateralAcceleration: Number(scenarios.lateralAccel) || 1.0,
       loadTransferFront: Math.round(dWF / G * 10) / 10,
       loadTransferRear: Math.round(dWR / G * 10) / 10,
       outsideFrontLoad: Math.round(wfOutside / G * 10) / 10,
@@ -323,7 +323,7 @@ export function calculateSuspension(inputs: SuspensionInputs): CalculationResult
       loadVariation: `${Math.round((fwheelTotalBumpF / (wfStatic/2)) * 100 - 100)}%`
     },
     performanceSummary: {
-      rideQualityScore: Math.round(rideQualityScore * 10) / 10,
+      rideQualityScore: Number((rideQualityScore).toFixed(1)),
       handlingBalance: balanceCategory,
       rollCompliance: rollGradCategory,
       bumpCompliance: categorizeLoadTransfer(lateralTransferPercent, "lateral"),
