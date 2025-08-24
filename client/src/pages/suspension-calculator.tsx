@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Car, Save, Download, BarChart3, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { InputSidebar } from "@/components/suspension/input-sidebar";
 import { ResultsDashboard } from "@/components/suspension/results-dashboard";
 import { SuspensionInputs, CalculationResults } from "@/types/suspension";
@@ -8,6 +9,7 @@ import { calculateSuspension } from "@/lib/suspension-calculations";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableCell, TableRow, WidthType, AlignmentType } from "docx";
 import { saveAs } from "file-saver";
 import { useToast } from "@/hooks/use-toast";
+import logoUrl from '@assets/generated_images/SuspendX_Pro_app_logo_4013aa65.png';
 
 export default function SuspensionCalculator() {
   const [results, setResults] = useState<CalculationResults | null>(null);
@@ -146,15 +148,17 @@ export default function SuspensionCalculator() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-primary text-text-secondary font-inter">
+    <div className="min-h-screen bg-background text-foreground font-inter transition-colors duration-300">
       {/* Header */}
-      <header className="bg-dark-secondary border-b border-dark-tertiary px-4 md:px-6 py-4">
+      <header className="bg-card border-b border-border px-4 md:px-6 py-4 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-accent-teal rounded-lg flex items-center justify-center">
-              <BarChart3 className="text-text-primary text-sm" size={16} />
-            </div>
-            <h1 className="text-lg md:text-xl font-bold text-text-primary" data-testid="title-app">
+            <img 
+              src={logoUrl} 
+              alt="SuspendX Pro" 
+              className="w-8 h-8 object-contain" 
+            />
+            <h1 className="text-lg md:text-xl font-bold text-foreground" data-testid="title-app">
               SuspendX Pro
             </h1>
           </div>
@@ -162,12 +166,13 @@ export default function SuspensionCalculator() {
           {/* Mobile Toggle Buttons */}
           {isMobile && (
             <div className="flex items-center space-x-2">
+              <ThemeToggle />
               <Button 
                 onClick={() => {
                   setShowInputs(!showInputs);
                   setShowResults(!showInputs ? false : showResults);
                 }}
-                className="px-3 py-2 bg-accent-blue text-text-primary rounded-lg hover:bg-opacity-80 transition-colors"
+                className="px-3 py-2 bg-accent-blue text-white rounded-lg hover:bg-opacity-80 transition-colors"
                 data-testid="button-toggle-inputs"
               >
                 <Menu size={16} className={showInputs ? "" : "hidden"} />
@@ -179,7 +184,7 @@ export default function SuspensionCalculator() {
                     setShowResults(!showResults);
                     setShowInputs(!showResults ? false : showInputs);
                   }}
-                  className="px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-text-primary rounded-lg transition-colors"
+                  className="px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors"
                   data-testid="button-toggle-results"
                 >
                   <BarChart3 size={16} />
@@ -190,9 +195,10 @@ export default function SuspensionCalculator() {
           
           {/* Desktop Header Buttons */}
           {!isMobile && (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              <ThemeToggle />
               <Button 
-                className="px-4 py-2 bg-accent-teal text-text-primary rounded-lg hover:bg-opacity-80 transition-colors"
+                className="px-4 py-2 bg-accent-teal text-white rounded-lg hover:bg-opacity-80 transition-colors"
                 data-testid="button-save-configuration"
               >
                 <Save size={16} className="mr-2" />
@@ -201,7 +207,7 @@ export default function SuspensionCalculator() {
               <Button 
                 onClick={handleExportToWord}
                 disabled={!results}
-                className="px-4 py-2 bg-accent-blue text-text-primary rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50"
+                className="px-4 py-2 bg-accent-blue text-white rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50"
                 data-testid="button-export-results"
               >
                 <Download size={16} className="mr-2" />

@@ -22,11 +22,11 @@ export function CollapsibleSection({
   return (
     <div className="mb-6">
       <button
-        className="w-full flex items-center justify-between p-4 bg-dark-tertiary rounded-lg hover:bg-opacity-80 transition-colors"
+        className="w-full flex items-center justify-between p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
         data-testid={`button-toggle-${title.toLowerCase().replace(/\s+/g, '-')}`}
       >
-        <span className="font-medium text-text-primary">
+        <span className="font-medium text-foreground">
           <span className={cn("mr-3", accentColor)}>
             {icon}
           </span>
@@ -34,7 +34,7 @@ export function CollapsibleSection({
         </span>
         <ChevronDown
           className={cn(
-            "text-text-muted transition-transform w-5 h-5",
+            "text-muted-foreground transition-transform w-5 h-5",
             isOpen && "rotate-180"
           )}
         />
@@ -42,7 +42,7 @@ export function CollapsibleSection({
       
       {isOpen && (
         <div className="mt-3 space-y-4" data-testid={`section-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-          <div className="bg-dark-primary p-4 rounded-lg space-y-4">
+          <div className="bg-background p-4 rounded-lg space-y-4 border border-border">
             {children}
           </div>
         </div>

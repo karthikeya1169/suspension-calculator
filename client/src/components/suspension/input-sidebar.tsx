@@ -50,9 +50,9 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
   const weightDistribution = watch("vehicle.weightDistribution");
 
   return (
-    <div className={`${isMobile ? 'w-full' : 'w-80'} bg-dark-secondary ${!isMobile ? 'border-r border-dark-tertiary' : ''} overflow-y-auto`}>
+    <div className={`${isMobile ? 'w-full' : 'w-80'} bg-card ${!isMobile ? 'border-r border-border' : ''} overflow-y-auto`}>
       <div className="p-6">
-        <h2 className="text-lg font-semibold text-text-primary mb-6" data-testid="title-input-parameters">
+        <h2 className="text-lg font-semibold text-foreground mb-6" data-testid="title-input-parameters">
           Input Parameters
         </h2>
         
@@ -64,19 +64,19 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
             accentColor="text-accent-teal"
           >
             <div>
-              <Label className="block text-sm font-medium text-text-secondary mb-2">
+              <Label className="block text-sm font-medium text-muted-foreground mb-2">
                 Vehicle Mass (kg)
               </Label>
               <Input
                 type="number"
                 {...register("vehicle.mass", { valueAsNumber: true })}
-                className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                 data-testid="input-vehicle-mass"
               />
             </div>
             
             <div>
-              <Label className="block text-sm font-medium text-text-secondary mb-2">
+              <Label className="block text-sm font-medium text-muted-foreground mb-2">
                 Front/Rear Weight Distribution (%)
               </Label>
               <div className="relative">
@@ -98,7 +98,7 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
             </div>
             
             <div>
-              <Label className="block text-sm font-medium text-text-secondary mb-2">
+              <Label className="block text-sm font-medium text-muted-foreground mb-2">
                 Sprung Mass Fraction
               </Label>
               <Input
@@ -107,59 +107,59 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
                 min="0"
                 max="1"
                 {...register("vehicle.sprungMassFraction", { valueAsNumber: true })}
-                className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                 data-testid="input-sprung-mass-fraction"
               />
             </div>
             
             <div>
-              <Label className="block text-sm font-medium text-text-secondary mb-2">
+              <Label className="block text-sm font-medium text-muted-foreground mb-2">
                 CG Height (m)
               </Label>
               <Input
                 type="number"
                 step="0.01"
                 {...register("vehicle.cgHeight", { valueAsNumber: true })}
-                className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                 data-testid="input-cg-height"
               />
             </div>
             
             <div>
-              <Label className="block text-sm font-medium text-text-secondary mb-2">
+              <Label className="block text-sm font-medium text-muted-foreground mb-2">
                 Wheelbase (m)
               </Label>
               <Input
                 type="number"
                 step="0.01"
                 {...register("vehicle.wheelbase", { valueAsNumber: true })}
-                className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                 data-testid="input-wheelbase"
               />
             </div>
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Front Track (m)
                 </Label>
                 <Input
                   type="number"
                   step="0.01"
                   {...register("vehicle.frontTrack", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-front-track"
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Rear Track (m)
                 </Label>
                 <Input
                   type="number"
                   step="0.01"
                   {...register("vehicle.rearTrack", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-rear-track"
                 />
               </div>
@@ -174,26 +174,26 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
           >
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Front Motion Ratio
                 </Label>
                 <Input
                   type="number"
                   step="0.01"
                   {...register("suspension.frontMotionRatio", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-front-motion-ratio"
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Rear Motion Ratio
                 </Label>
                 <Input
                   type="number"
                   step="0.01"
                   {...register("suspension.rearMotionRatio", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-rear-motion-ratio"
                 />
               </div>
@@ -201,26 +201,26 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Front Ride Freq (Hz)
                 </Label>
                 <Input
                   type="number"
                   step="0.1"
                   {...register("suspension.frontRideFreq", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-front-ride-freq"
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Rear Ride Freq (Hz)
                 </Label>
                 <Input
                   type="number"
                   step="0.1"
                   {...register("suspension.rearRideFreq", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-rear-ride-freq"
                 />
               </div>
@@ -228,26 +228,26 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Front Damping Ratio (ζ)
                 </Label>
                 <Input
                   type="number"
                   step="0.01"
                   {...register("suspension.frontDampingRatio", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-front-damping-ratio"
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Rear Damping Ratio (ζ)
                 </Label>
                 <Input
                   type="number"
                   step="0.01"
                   {...register("suspension.rearDampingRatio", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-rear-damping-ratio"
                 />
               </div>
@@ -255,24 +255,24 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   ARB Front (Nm/rad)
                 </Label>
                 <Input
                   type="number"
                   {...register("suspension.arbFront", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-arb-front"
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   ARB Rear (Nm/rad)
                 </Label>
                 <Input
                   type="number"
                   {...register("suspension.arbRear", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-arb-rear"
                 />
               </div>
@@ -280,24 +280,24 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Unsprung Mass Front (kg/corner)
                 </Label>
                 <Input
                   type="number"
                   {...register("suspension.unsprungMassFront", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-unsprung-mass-front"
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Unsprung Mass Rear (kg/corner)
                 </Label>
                 <Input
                   type="number"
                   {...register("suspension.unsprungMassRear", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-unsprung-mass-rear"
                 />
               </div>
@@ -311,40 +311,40 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
             accentColor="text-accent-amber"
           >
             <div>
-              <Label className="block text-sm font-medium text-text-secondary mb-2">
+              <Label className="block text-sm font-medium text-muted-foreground mb-2">
                 Cornering Lateral Acceleration (g)
               </Label>
               <Input
                 type="number"
                 step="0.1"
                 {...register("scenarios.lateralAccel", { valueAsNumber: true })}
-                className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                 data-testid="input-lateral-accel"
               />
             </div>
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Longitudinal Accel (g)
                 </Label>
                 <Input
                   type="number"
                   step="0.1"
                   {...register("scenarios.longAccel", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-long-accel"
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Braking Decel (g)
                 </Label>
                 <Input
                   type="number"
                   step="0.1"
                   {...register("scenarios.brakingDecel", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-braking-decel"
                 />
               </div>
@@ -352,26 +352,26 @@ export function InputSidebar({ onCalculate, isCalculating, isMobile = false }: I
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Bump Travel (m)
                 </Label>
                 <Input
                   type="number"
                   step="0.01"
                   {...register("scenarios.bumpTravel", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-bump-travel"
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-text-secondary mb-2">
+                <Label className="block text-sm font-medium text-muted-foreground mb-2">
                   Bump Velocity (m/s)
                 </Label>
                 <Input
                   type="number"
                   step="0.1"
                   {...register("scenarios.bumpVelocity", { valueAsNumber: true })}
-                  className="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-lg text-foreground focus:border-accent-teal focus:outline-none transition-colors"
                   data-testid="input-bump-velocity"
                 />
               </div>

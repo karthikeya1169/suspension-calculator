@@ -19,10 +19,10 @@ interface ResultsDashboardProps {
 export function ResultsDashboard({ results, isMobile = false, onExportToWord }: ResultsDashboardProps) {
   if (!results) {
     return (
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-dark-primary">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl font-bold text-text-primary mb-4 md:mb-0" data-testid="title-calculation-results">
+            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4 md:mb-0" data-testid="title-calculation-results">
               Analysis Results
             </h2>
             {isMobile && onExportToWord && results && (
@@ -52,10 +52,10 @@ export function ResultsDashboard({ results, isMobile = false, onExportToWord }: 
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-dark-primary">
+    <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8">
-          <h2 className="text-xl md:text-2xl font-bold text-text-primary mb-4 md:mb-0" data-testid="title-calculation-results">
+          <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4 md:mb-0" data-testid="title-calculation-results">
             Analysis Results
           </h2>
           {isMobile && onExportToWord && (
@@ -75,6 +75,7 @@ export function ResultsDashboard({ results, isMobile = false, onExportToWord }: 
             title="Springs & Damping"
             icon={<Activity className="text-accent-teal" size={20} />}
             accentColor="bg-accent-teal"
+            helpKey="springRates"
             items={[
               {
                 label: "Spring Rate Front",
@@ -110,6 +111,7 @@ export function ResultsDashboard({ results, isMobile = false, onExportToWord }: 
             title="Ride & Roll"
             icon={<BarChart3 className="text-accent-blue" size={20} />}
             accentColor="bg-accent-blue"
+            helpKey="naturalFrequency"
             items={[
               {
                 label: "Natural Frequency Front",
@@ -239,7 +241,7 @@ export function ResultsDashboard({ results, isMobile = false, onExportToWord }: 
 
           {/* Performance Summary Card */}
           <div className="lg:col-span-2 xl:col-span-1">
-            <div className="bg-dark-secondary rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6">
+            <div className="bg-card rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6 border border-border">
               <div className="flex items-center mb-4">
                 <div className="w-10 h-10 bg-accent-amber bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
                   <Target className="text-accent-amber" size={20} />

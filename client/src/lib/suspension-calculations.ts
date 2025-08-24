@@ -127,31 +127,31 @@ function calculateRideQualityScore(
   rearZeta: number,
   rollGrad: number
 ): number {
-  // Composite score based on ideal ranges
+  // Composite score based on ideal ranges (0-10 scale)
   let score = 0;
   
-  // Frequency scoring (target 2.5-3.0 Hz)
+  // Frequency scoring (target 2.5-3.0 Hz) - max 3 points
   const avgFreq = (frontFreq + rearFreq) / 2;
-  if (avgFreq >= 2.5 && avgFreq <= 3.0) score += 30;
-  else if (avgFreq >= 2.0 && avgFreq <= 3.5) score += 20;
-  else if (avgFreq >= 1.5 && avgFreq <= 4.0) score += 10;
+  if (avgFreq >= 2.5 && avgFreq <= 3.0) score += 3;
+  else if (avgFreq >= 2.0 && avgFreq <= 3.5) score += 2;
+  else if (avgFreq >= 1.5 && avgFreq <= 4.0) score += 1;
   
-  // Damping scoring (target 0.3-0.6)
+  // Damping scoring (target 0.3-0.6) - max 3 points
   const avgZeta = (frontZeta + rearZeta) / 2;
-  if (avgZeta >= 0.3 && avgZeta <= 0.6) score += 30;
-  else if (avgZeta >= 0.2 && avgZeta <= 0.7) score += 20;
-  else if (avgZeta >= 0.1) score += 10;
+  if (avgZeta >= 0.3 && avgZeta <= 0.6) score += 3;
+  else if (avgZeta >= 0.2 && avgZeta <= 0.7) score += 2;
+  else if (avgZeta >= 0.1) score += 1;
   
-  // Roll gradient scoring (target < 12 deg/g)
-  if (rollGrad < 8) score += 25;
-  else if (rollGrad < 12) score += 20;
-  else if (rollGrad < 16) score += 10;
-  else if (rollGrad < 20) score += 5;
+  // Roll gradient scoring (target < 12 deg/g) - max 2.5 points
+  if (rollGrad < 8) score += 2.5;
+  else if (rollGrad < 12) score += 2;
+  else if (rollGrad < 16) score += 1;
+  else if (rollGrad < 20) score += 0.5;
   
-  // Balance bonus
-  if (Math.abs(frontFreq - rearFreq) < 0.3) score += 15; // frequency balance
+  // Balance bonus - max 1.5 points
+  if (Math.abs(frontFreq - rearFreq) < 0.3) score += 1.5; // frequency balance
   
-  return Math.min(100, Math.max(0, score));
+  return Math.min(10, Math.max(0, score));
 }
 
 // Main calculation function
@@ -323,7 +323,7 @@ export function calculateSuspension(inputs: SuspensionInputs): CalculationResult
       loadVariation: `${Math.round((fwheelTotalBumpF / (wfStatic/2)) * 100 - 100)}%`
     },
     performanceSummary: {
-      rideQualityScore: Number((rideQualityScore).toFixed(1)),
+      rideQualityScore: Number(rideQualityScore.toFixed(1)),
       handlingBalance: balanceCategory,
       rollCompliance: rollGradCategory,
       bumpCompliance: categorizeLoadTransfer(lateralTransferPercent, "lateral"),

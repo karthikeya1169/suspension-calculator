@@ -4,6 +4,58 @@
 @tailwind utilities;
 
 :root {
+  /* Light Mode Colors */
+  --background: hsl(0, 0%, 98%);
+  --foreground: hsl(240, 10%, 3.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(240, 10%, 3.9%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(240, 10%, 3.9%);
+  --primary: hsl(183, 50%, 48%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(240, 4.8%, 95.9%);
+  --secondary-foreground: hsl(240, 5.9%, 10%);
+  --muted: hsl(240, 4.8%, 95.9%);
+  --muted-foreground: hsl(240, 3.8%, 46.1%);
+  --accent: hsl(183, 50%, 48%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 5.9%, 90%);
+  --input: hsl(240, 5.9%, 90%);
+  --ring: hsl(183, 50%, 48%);
+  --chart-1: hsl(183, 50%, 48%);
+  --chart-2: hsl(159, 100%, 36%);
+  --chart-3: hsl(42, 93%, 56%);
+  --chart-4: hsl(147, 79%, 42%);
+  --chart-5: hsl(341, 75%, 51%);
+  --sidebar: hsl(0, 0%, 100%);
+  --sidebar-foreground: hsl(240, 10%, 3.9%);
+  --sidebar-primary: hsl(183, 50%, 48%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(240, 4.8%, 95.9%);
+  --sidebar-accent-foreground: hsl(183, 50%, 48%);
+  --sidebar-border: hsl(240, 5.9%, 90%);
+  --sidebar-ring: hsl(183, 50%, 48%);
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: 'Menlo', monospace;
+  --radius: 0.75rem;
+
+  /* Custom light mode colors */
+  --light-primary: hsl(0, 0%, 98%);
+  --light-secondary: hsl(0, 0%, 100%);
+  --light-tertiary: hsl(240, 4.8%, 95.9%);
+  --accent-teal: hsl(183, 50%, 48%);
+  --accent-blue: hsl(208, 73%, 58%);
+  --accent-amber: hsl(42, 93%, 56%);
+  --text-primary: hsl(240, 10%, 3.9%);
+  --text-secondary: hsl(240, 5.9%, 10%);
+  --text-muted: hsl(240, 3.8%, 46.1%);
+}
+
+.dark {
+  /* Dark Mode Colors */
   --background: hsl(240, 21%, 15%);
   --foreground: hsl(240, 9%, 89%);
   --card: hsl(240, 15%, 17%);
@@ -23,11 +75,6 @@
   --border: hsl(240, 15%, 22%);
   --input: hsl(240, 15%, 22%);
   --ring: hsl(183, 50%, 48%);
-  --chart-1: hsl(183, 50%, 48%);
-  --chart-2: hsl(159, 100%, 36%);
-  --chart-3: hsl(42, 93%, 56%);
-  --chart-4: hsl(147, 79%, 42%);
-  --chart-5: hsl(341, 75%, 51%);
   --sidebar: hsl(240, 15%, 17%);
   --sidebar-foreground: hsl(240, 9%, 89%);
   --sidebar-primary: hsl(183, 50%, 48%);
@@ -36,18 +83,11 @@
   --sidebar-accent-foreground: hsl(183, 50%, 48%);
   --sidebar-border: hsl(240, 15%, 22%);
   --sidebar-ring: hsl(183, 50%, 48%);
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: 'Menlo', monospace;
-  --radius: 0.75rem;
 
-  /* Custom suspension calculator colors */
+  /* Custom dark mode colors */
   --dark-primary: hsl(240, 21%, 15%);
   --dark-secondary: hsl(240, 15%, 17%);
   --dark-tertiary: hsl(240, 15%, 22%);
-  --accent-teal: hsl(183, 50%, 48%);
-  --accent-blue: hsl(208, 73%, 58%);
-  --accent-amber: hsl(42, 93%, 56%);
   --text-primary: hsl(0, 0%, 100%);
   --text-secondary: hsl(240, 9%, 89%);
   --text-muted: hsl(240, 5%, 72%);
@@ -59,7 +99,7 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground transition-colors duration-300;
     font-family: var(--font-sans);
   }
 
@@ -95,18 +135,33 @@
 }
 
 @layer utilities {
+  /* Theme-aware backgrounds */
+  .bg-app-primary {
+    @apply bg-background;
+  }
+  
+  .bg-app-secondary {
+    @apply bg-card;
+  }
+  
+  .bg-app-tertiary {
+    @apply bg-muted;
+  }
+  
+  /* Legacy dark mode classes for compatibility */
   .bg-dark-primary {
-    background-color: hsl(240, 21%, 15%);
+    @apply bg-background;
   }
   
   .bg-dark-secondary {
-    background-color: hsl(240, 15%, 17%);
+    @apply bg-card;
   }
   
   .bg-dark-tertiary {
-    background-color: hsl(240, 15%, 22%);
+    @apply bg-muted;
   }
   
+  /* Accent colors */
   .bg-accent-teal {
     background-color: hsl(183, 50%, 48%);
   }
@@ -131,27 +186,43 @@
     color: hsl(42, 93%, 56%);
   }
   
+  /* Theme-aware text colors */
   .text-text-primary {
-    color: hsl(0, 0%, 100%);
+    @apply text-foreground;
   }
   
   .text-text-secondary {
-    color: hsl(240, 9%, 89%);
+    @apply text-muted-foreground;
   }
   
   .text-text-muted {
-    color: hsl(240, 5%, 72%);
+    @apply text-muted-foreground;
+  }
+  
+  /* Theme-aware borders */
+  .border-app-tertiary {
+    @apply border-border;
   }
   
   .border-dark-tertiary {
-    border-color: hsl(240, 15%, 22%);
+    @apply border-border;
   }
   
+  /* Theme-aware shadows */
   .shadow-card {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    @apply shadow-md;
   }
   
   .shadow-card-hover {
-    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    @apply shadow-lg;
+  }
+  
+  /* Input validation styles */
+  .input-error {
+    @apply border-red-500 bg-red-50 dark:bg-red-950/20;
+  }
+  
+  .input-warning {
+    @apply border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20;
   }
 }
