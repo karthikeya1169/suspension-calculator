@@ -1,0 +1,303 @@
+#!/usr/bin/env python3
+# Full Suspension Calculator (terminal)
+# Units: SI (kg, m, N, s, rad). Frequencies in Hz. Accelerations in g or m/s^2 as noted.
+
+import math
+
+# -----------------------------
+# Helpers
+# -----------------------------
+def hz_from_kwheel_m(k_wheel, m):
+    # f = (1/(2π)) * sqrt(k_wheel/m)
+    return (1.0/(2.0*math.pi)) * math.sqrt(k_wheel / m)
+
+def ks_from_freq_mass_mr(f, m, MR):
+    # k_spring = ((2π f)^2 * m) / MR^2
+    return ((2.0*math.pi*f)**2 * m) / (MR**2)
+
+def kwheel_from_ks_mr(k_spring, MR):
+    # k_wheel = k_spring * MR^2
+    return k_spring * (MR**2)
+
+def critical_damping(k_wheel, m):
+    # c_crit = 2*sqrt(k_wheel * m)
+    return 2.0 * math.sqrt(k_wheel * m)
+
+def axle_roll_stiffness_from_wheel_rate(k_wheel_per_wheel, track):
+    # Small-angle linear model: K_phi_axle = k_wheel_per_wheel * t^2 / 2  (Nm/rad)
+    return k_wheel_per_wheel * (track**2) / 2.0
+
+def roll_angle_deg(total_roll_moment, Kphi_total):
+    # phi (rad) = M / Kphi; return deg
+    phi_rad = total_roll_moment / Kphi_total if Kphi_total > 0 else 0.0
+    return math.degrees(phi_rad), phi_rad
+
+def clamp(v, vmin, vmax):
+    return max(vmin, min(vmax, v))
+
+def ask_float(prompt, default=None):
+    s = input(f"{prompt}" + (f" [{default}]: " if default is not None else ": "))
+    if s.strip() == "" and default is not None:
+        return float(default)
+    return float(s)
+
+def ask_yes_no(prompt, default_yes=True):
+    d = "Y/n" if default_yes else "y/N"
+    s = input(f"{prompt} ({d}): ").strip().lower()
+    if s == "" and default_yes: return True
+    if s == "" and not default_yes: return False
+    return s.startswith("y")
+
+# -----------------------------
+# Core calculator
+# -----------------------------
+def main():
+    print("=== Full Suspension Calculator (SI units) ===")
+    print("Notes: enter accelerations in g where asked (e.g., 0.9 for 0.9g).")
+    print("----------------------------------------------------------------")
+
+    # ---- Vehicle global inputs
+    m_total = ask_float("Total vehicle mass, kg", 250.0)
+    weight_dist_front = ask_float("Static front weight distribution (0-1)", 0.55)  # fraction on front axle
+    m_sprung_frac = ask_float("Sprung-mass fraction of total (0-1)", 0.88)
+    h_cg = ask_float("CG height above ground, m", 0.55)
+    wheelbase = ask_float("Wheelbase, m", 1.6)
+    track_f = ask_float("Front track, m", 1.25)
+    track_r = ask_float("Rear track, m", 1.20)
+
+    # Unsprung masses (approx per corner)
+    m_uns_f = ask_float("Unsprung mass per front corner, kg", 18.0)
+    m_uns_r = ask_float("Unsprung mass per rear corner, kg", 20.0)
+
+    # Motion ratios
+    MR_f = ask_float("Front motion ratio (wheel/spring displacement)", 0.95)
+    MR_r = ask_float("Rear motion ratio (wheel/spring displacement)", 1.00)
+
+    # Ride frequencies & damping ratios (target)
+    f_f = ask_float("Target front ride frequency, Hz", 1.6)
+    f_r = ask_float("Target rear ride frequency, Hz", 1.8)
+    zeta_f = ask_float("Front damping ratio (e.g., 0.30)", 0.30)
+    zeta_r = ask_float("Rear damping ratio (e.g., 0.35)", 0.35)
+
+    # Anti-roll bars (optional) — provide roll stiffness in Nm/rad per axle (0 if none)
+    Kphi_bar_f = ask_float("Front ARB roll stiffness, Nm/rad (0 if none)", 0.0)
+    Kphi_bar_r = ask_float("Rear ARB roll stiffness, Nm/rad (0 if none)", 0.0)
+
+    # Tire-road friction for lateral capacity estimates
+    mu = ask_float("Tire-road friction coefficient mu", 1.1)
+
+    # Scenario inputs
+    ay_g = ask_float("Cornering lateral accel, g", 0.9)
+    ax_g_accel = ask_float("Longitudinal accel, g (positive = accelerating)", 0.15)
+    ax_g_brake = ask_float("Longitudinal decel, g (positive = braking)", 0.9)
+
+    # Bump event inputs (wheel domain)
+    bump_travel_f = ask_float("Front single-wheel bump travel, m (wheel domain)", 0.05)
+    bump_vel_f = ask_float("Front wheel bump velocity, m/s", 0.5)
+    bump_travel_r = ask_float("Rear single-wheel bump travel, m (wheel domain)", 0.05)
+    bump_vel_r = ask_float("Rear wheel bump velocity, m/s", 0.5)
+
+    # -----------------------------
+    # Derived masses & static loads
+    # -----------------------------
+    m_sprung = m_total * m_sprung_frac
+    m_unsprung_total = m_total - m_sprung
+    # Static axle masses (total), simple by distribution:
+    m_front_total = m_total * weight_dist_front
+    m_rear_total  = m_total - m_front_total
+
+    # Per-corner masses:
+    # Sprung mass per corner (approx by axle split)
+    m_sprung_front_axle = m_sprung * weight_dist_front
+    m_sprung_rear_axle  = m_sprung - m_sprung_front_axle
+    m_sprung_per_wheel_f = m_sprung_front_axle / 2.0
+    m_sprung_per_wheel_r = m_sprung_rear_axle  / 2.0
+
+    # Unsprung per axle (from inputs per corner):
+    m_unsprung_front_axle = 2.0 * m_uns_f
+    m_unsprung_rear_axle  = 2.0 * m_uns_r
+
+    # Static vertical loads (N)
+    g = 9.80665
+    W_total = m_total * g
+    Wf_static = m_front_total * g
+    Wr_static = m_rear_total  * g
+    W_fl_static = Wf_static / 2.0
+    W_fr_static = Wf_static / 2.0
+    W_rl_static = Wr_static / 2.0
+    W_rr_static = Wr_static / 2.0
+
+    # -----------------------------
+    # Spring & damper sizing
+    # -----------------------------
+    # Spring rates from target ride freq and sprung mass per wheel:
+    k_spring_f = ks_from_freq_mass_mr(f_f, m_sprung_per_wheel_f, MR_f)  # N/m
+    k_spring_r = ks_from_freq_mass_mr(f_r, m_sprung_per_wheel_r, MR_r)
+
+    # Wheel rates:
+    k_wheel_f = kwheel_from_ks_mr(k_spring_f, MR_f)  # N/m (per wheel)
+    k_wheel_r = kwheel_from_ks_mr(k_spring_r, MR_r)
+
+    # Frequency check:
+    f_f_check = hz_from_kwheel_m(k_wheel_f, m_sprung_per_wheel_f)
+    f_r_check = hz_from_kwheel_m(k_wheel_r, m_sprung_per_wheel_r)
+
+    # Damping (per wheel):
+    ccrit_f = critical_damping(k_wheel_f, m_sprung_per_wheel_f)  # Ns/m
+    ccrit_r = critical_damping(k_wheel_r, m_sprung_per_wheel_r)
+    c_f = zeta_f * ccrit_f
+    c_r = zeta_r * ccrit_r
+
+    # -----------------------------
+    # Roll stiffness & roll gradient
+    # -----------------------------
+    # Axle roll stiffness from springs (per axle):
+    Kphi_f_spr = axle_roll_stiffness_from_wheel_rate(k_wheel_f, track_f) * 2.0  # 2 wheels? Careful:
+    # NOTE: axle_roll_stiffness_from_wheel_rate used k_wheel_per_wheel; it already represents pair effect.
+    # For clarity, compute once per axle directly:
+    Kphi_f_spr = k_wheel_f * (track_f**2) / 2.0  # Nm/rad (front axle)
+    Kphi_r_spr = k_wheel_r * (track_r**2) / 2.0  # Nm/rad (rear axle)
+
+    # Add bars:
+    Kphi_f = Kphi_f_spr + Kphi_bar_f
+    Kphi_r = Kphi_r_spr + Kphi_bar_r
+    Kphi_total = Kphi_f + Kphi_r if (Kphi_f + Kphi_r) > 0 else 1e-9
+
+    # Cornering lateral accel (m/s^2)
+    ay = ay_g * g
+
+    # Roll moment about CG from sprung mass (classical):
+    # Use sprung mass only for roll moment (unsprung contributes little to body roll)
+    M_roll = m_sprung * ay * h_cg  # N·m
+
+    # Roll angle & roll gradient:
+    phi_deg, phi_rad = roll_angle_deg(M_roll, Kphi_total)
+    # Roll gradient (deg/g):
+    roll_grad_deg_per_g = phi_deg / ay_g if ay_g != 0 else 0.0
+
+    # Roll stiffness distribution:
+    front_roll_stiff_frac = Kphi_f / Kphi_total
+
+    # -----------------------------
+    # Lateral load transfer (simplified)
+    # -----------------------------
+    # Sprung mass lateral load transfer apportioned by roll stiffness between axles:
+    # ΔW_sprung_axle = (Kphi_axle / Kphi_total) * (m_sprung * ay * h_cg) / track_axle
+    dW_sprung_f = (Kphi_f / Kphi_total) * (m_sprung * ay * h_cg) / track_f
+    dW_sprung_r = (Kphi_r / Kphi_total) * (m_sprung * ay * h_cg) / track_r
+
+    # Unsprung/geometric (very simplified): assume unsprung lateral transfer = m_unsprung_axle * ay * h_wheel_center / track
+    # Use wheel center height ~ 0.3 m default (reasonable ATV/car proxy). You can tune if needed.
+    h_wheel_center = 0.30
+    dW_uns_f = (m_unsprung_front_axle * ay * h_wheel_center) / track_f
+    dW_uns_r = (m_unsprung_rear_axle  * ay * h_wheel_center) / track_r
+
+    # Total per axle:
+    dW_f = dW_sprung_f + dW_uns_f
+    dW_r = dW_sprung_r + dW_uns_r
+
+    # Corner loads (inside = left, assume left is inside turn):
+    # Front:
+    Wf_inside = (Wf_static/2.0) - (dW_f/2.0)
+    Wf_outside = (Wf_static/2.0) + (dW_f/2.0)
+    # Rear:
+    Wr_inside = (Wr_static/2.0) - (dW_r/2.0)
+    Wr_outside = (Wr_static/2.0) + (dW_r/2.0)
+
+    # Tire lateral capacity estimate (per tire) at these vertical loads:
+    # F_lat_max ≈ mu * Fz (very simplified, ignores load sensitivity)
+    Fy_f_in_max = mu * Wf_inside
+    Fy_f_out_max = mu * Wf_outside
+    Fy_r_in_max = mu * Wr_inside
+    Fy_r_out_max = mu * Wr_outside
+    Fy_total_max = Fy_f_in_max + Fy_f_out_max + Fy_r_in_max + Fy_r_out_max
+
+    # Required lateral force at given ay:
+    Fy_required = m_total * ay  # N
+
+    # -----------------------------
+    # Longitudinal weight transfer
+    # -----------------------------
+    def long_transfer(ax_g_val):
+        ax = ax_g_val * g  # m/s^2
+        # ΔW_long = m_total * ax * h_cg / wheelbase  (N), transfers from rear->front if braking (ax positive for braking here?)
+        # We'll define: positive ax_g_val => forward acceleration; positive decel input (braking) handled separately below.
+        dW = (m_total * ax * h_cg) / wheelbase
+        return dW  # N
+
+    # Acceleration case (positive = accelerating -> load shifts to rear):
+    dW_accel = long_transfer(ax_g_accel)  # N shifts from front to rear (negative if ax positive? Check sign)
+    # With our formula, positive ax shifts load rearward, so front loses dW, rear gains dW:
+    Wf_accel = Wf_static - dW_accel
+    Wr_accel = Wr_static + dW_accel
+
+    # Braking case (input given as positive braking g): convert to ax = -ax_g_brake*g to represent decel
+    dW_brake = long_transfer(-ax_g_brake)  # this returns negative; minus negative => shift to front
+    Wf_brake = Wf_static - dW_brake  # dW_brake negative -> adds to front
+    Wr_brake = Wr_static + dW_brake  # subtracts from rear
+
+    # -----------------------------
+    # Bump event forces (single-wheel bump)
+    # -----------------------------
+    # Spring force at wheel: F_spring_wheel = k_wheel * x_wheel
+    # Damper force at wheel: F_damper_wheel = c * v_wheel
+    # At the spring/damper (in-line), forces are same as wheel-side in linear MR model,
+    # but deflection/velocity scale by MR (we already used wheel-domain inputs).
+    Fspring_bump_f = k_wheel_f * bump_travel_f
+    Fdamper_bump_f = c_f * bump_vel_f
+    Fwheel_total_bump_f = Fspring_bump_f + Fdamper_bump_f
+
+    Fspring_bump_r = k_wheel_r * bump_travel_r
+    Fdamper_bump_r = c_r * bump_vel_r
+    Fwheel_total_bump_r = Fspring_bump_r + Fdamper_bump_r
+
+    # -----------------------------
+    # Outputs
+    # -----------------------------
+    print("\n================= RESULTS =================")
+    print(f"Total mass: {m_total:.2f} kg | Sprung mass: {m_sprung:.2f} kg | Unsprung total: {m_unsprung_total:.2f} kg")
+    print(f"Static axle loads: Front {Wf_static:.1f} N  | Rear {Wr_static:.1f} N")
+    print(f"Per-corner sprung mass: Front {m_sprung_per_wheel_f:.2f} kg | Rear {m_sprung_per_wheel_r:.2f} kg")
+    print("\n--- Springs & Damping (per corner) ---")
+    print(f"Front: MR={MR_f:.3f}, f_target={f_f:.3f} Hz, k_spring={k_spring_f:.1f} N/m, k_wheel={k_wheel_f:.1f} N/m")
+    print(f"       f_check={f_f_check:.3f} Hz, c_crit={ccrit_f:.1f} Ns/m, zeta={zeta_f:.2f}, c={c_f:.1f} Ns/m")
+    print(f"Rear : MR={MR_r:.3f}, f_target={f_r:.3f} Hz, k_spring={k_spring_r:.1f} N/m, k_wheel={k_wheel_r:.1f} N/m")
+    print(f"       f_check={f_r_check:.3f} Hz, c_crit={ccrit_r:.1f} Ns/m, zeta={zeta_r:.2f}, c={c_r:.1f} Ns/m")
+
+    print("\n--- Roll Stiffness & Roll Gradient ---")
+    print(f"Kphi_front_spr = {Kphi_f_spr:.1f} Nm/rad | Kphi_rear_spr = {Kphi_r_spr:.1f} Nm/rad")
+    print(f"Kphi_front_bar = {Kphi_bar_f:.1f} Nm/rad | Kphi_rear_bar = {Kphi_bar_r:.1f} Nm/rad")
+    print(f"Kphi_front = {Kphi_f:.1f} Nm/rad | Kphi_rear = {Kphi_r:.1f} Nm/rad | Kphi_total = {Kphi_total:.1f} Nm/rad")
+    print(f"Roll moment (sprung) @ {ay_g:.2f} g = {M_roll:.1f} N·m")
+    print(f"Roll angle = {phi_deg:.3f} deg ({phi_rad:.5f} rad) | Roll gradient = {roll_grad_deg_per_g:.3f} deg/g")
+    print(f"Front roll stiffness distribution = {front_roll_stiff_frac*100:.1f}%")
+
+    print("\n--- Lateral Load Transfer (cornering) ---")
+    print(f"Sprung ΔW: Front {dW_sprung_f:.1f} N | Rear {dW_sprung_r:.1f} N")
+    print(f"Unsprung ΔW (approx): Front {dW_uns_f:.1f} N | Rear {dW_uns_r:.1f} N")
+    print(f"Total ΔW: Front {dW_f:.1f} N | Rear {dW_r:.1f} N")
+    print(f"Corner loads (inside/outside):")
+    print(f"  Front: inside {Wf_inside:.1f} N | outside {Wf_outside:.1f} N")
+    print(f"  Rear : inside {Wr_inside:.1f} N | outside {Wr_outside:.1f} N")
+
+    print("\n--- Lateral Force Capacity (very simplified) ---")
+    print(f"mu = {mu:.2f}")
+    print(f"Per-tire Fy_max: F_in_front={Fy_f_in_max:.1f} N | F_out_front={Fy_f_out_max:.1f} N | F_in_rear={Fy_r_in_max:.1f} N | F_out_rear={Fy_r_out_max:.1f} N")
+    print(f"Total Fy_max ≈ {Fy_total_max:.1f} N | Required Fy @ {ay_g:.2f} g = {Fy_required:.1f} N")
+    suff = "YES" if Fy_total_max >= Fy_required else "NO"
+    print(f"Sufficient lateral capacity? {suff}")
+
+    print("\n--- Longitudinal Weight Transfer ---")
+    print(f"Acceleration {ax_g_accel:.2f} g: Front axle {Wf_accel:.1f} N | Rear axle {Wr_accel:.1f} N")
+    print(f"Braking {ax_g_brake:.2f} g: Front axle {Wf_brake:.1f} N | Rear axle {Wr_brake:.1f} N")
+
+    print("\n--- Single-Wheel Bump Event (forces at wheel) ---")
+    print(f"Front bump: x={bump_travel_f:.3f} m, v={bump_vel_f:.3f} m/s -> F_spring={Fspring_bump_f:.1f} N, F_damper={Fdamper_bump_f:.1f} N, F_total={Fwheel_total_bump_f:.1f} N")
+    print(f"Rear  bump: x={bump_travel_r:.3f} m, v={bump_vel_r:.3f} m/s -> F_spring={Fspring_bump_r:.1f} N, F_damper={Fdamper_bump_r:.1f} N, F_total={Fwheel_total_bump_r:.1f} N")
+
+    print("\nTip: Adjust MR, ride frequencies, or ARB stiffness to hit target roll gradient and balance (front roll %).")
+    print("     Increase front roll % -> more understeer tendency; increase rear roll % -> more oversteer tendency (simplified).")
+    print("==============================================")
+
+if __name__ == "__main__":
+    main()

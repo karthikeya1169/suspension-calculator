@@ -1,0 +1,45 @@
+ **UI Improvements**
+   - Add **color grading** to each metric in the Performance Summary:
+     - Green → Excellent / Safe values
+     - Yellow → Acceptable but needs improvement
+     - Red → Dangerous / Out of range
+   - Example:
+     - Ride Quality Score: >8 = Green, 5–8 = Yellow, <5 = Red
+     - Handling Balance: Balanced = Green, Mild Under/Oversteer = Yellow, Severe = Red
+     - Roll Compliance: Excellent = Green, Moderate = Yellow, Poor = Red
+     - Bump Compliance: Excellent/Good = Green, Fair = Yellow, Poor = Red
+   - Each metric should visibly change color to reflect status.
+
+2. **Help / Info Buttons**
+   - Add a small **“?” icon** (tooltip or popup) beside each performance parameter.
+   - When clicked, it should explain:
+     - What the term means
+     - Why it is important
+     - Recommended safe/ideal ranges for Baja ATV and general ATVs
+   - Example:
+     - Ride Quality Score → "A measure of comfort and terrain absorption. 8–10 = Excellent, <5 = Harsh ride."
+     - Handling Balance → "Indicates steering behavior. Balanced is ideal; too much understeer/oversteer reduces control."
+     - Roll Compliance → "How well suspension manages chassis roll. Excellent = stable cornering."
+     - Bump Compliance → "Ability to absorb sudden shocks without losing traction. Higher = safer on rough terrain."
+
+3. **Export to Word**
+   - Add export option to generate a **Word report (.docx)**.
+   - Report formatting must be:
+     - Text color = black
+     - Font = Arial or Calibri
+     - Font size = 11 or 12 pt
+     - Professional layout (headings bold, metrics in tables, notes in italics if needed)
+   - Include both **raw values** and **color-coded status (Excellent/Good/Poor)** in the document.
+
+4. **Backend Integration**
+   - Use **Python (FastAPI or Flask)** to handle:
+     - Data processing (calculate whether values fall in Excellent/Good/Poor)
+     - Serving help text content dynamically
+     - Generating the Word report
+   - Frontend communicates with backend to fetch help text and performance grading.
+
+---
+
+⚡ The main goal:  
+- The dashboard should not only **show results** but also **teach the user what each term means and highlight dangerous values clearly**.
+- The exported report should look **professional and easy to share**.

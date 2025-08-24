@@ -1,0 +1,154 @@
+We define performance categories (Excellent/Good/Neutral/Poor) for each suspension metric, tailoring thresholds to ATV types (Baja off-road racers, Utility work machines, Sport quads, Racing/competition ATVs). Numeric ranges are chosen to reflect good handling and comfort. Cited benchmarks include comfort targets of 2–3 Hz ride frequency and ζ≈0.3–0.6
+ijera.com
+, measured ATV roll gradients (~5–17°/g)
+cpsc.gov
+, and ideal bump-travel ratios (~60–70%)
+store.supashock.com
+.
+Ride Frequency (Hz)
+Baja ATVs: Excellent >3.0 Hz, Good 2.5–3.0, Neutral 2.0–2.5, Poor <2.0. (Target ~2.0–3.2 Hz for comfort
+ijera.com
+; higher is stiffer.)
+Utility ATVs: Excellent 2.0–2.8 Hz, Good 1.5–2.0, Neutral 1.0–1.5, Poor <1.0. (Slower machines use lower frequencies.)
+Sport ATVs: Excellent 2.8–3.5 Hz, Good 2.3–2.8, Neutral 1.8–2.3, Poor <1.8. (Recreational/quicker response.)
+Racing ATVs: Excellent >3.5 Hz, Good 3.0–3.5, Neutral 2.5–3.0, Poor <2.5. (Track-focused: stiffer suspension.)
+Damping Ratio (ζ)
+(Percent of critical damping.) Target moderate damping for control without harshness
+ijera.com
+.
+All ATV types: Excellent 0.40–0.60, Good 0.30–0.40, Neutral 0.20–0.30, Poor <0.20. (High ζ reduces oscillation; ζ≈0.3–0.6 is typical
+ijera.com
+.)
+Roll Gradient (deg/g)
+(Roll angle per 1 g lateral accel; lower is stiffer/less roll.) Measured ATVs have shown ~5–17°/g
+cpsc.gov
+. Typical passenger vehicles run ~3–8°/g
+optimumg.com
+. We set:
+Racing: Excellent <6°/g, Good 6–10, Neutral 10–15, Poor >15. (Very stiff suspension.)
+Sport: Excellent <8°/g, Good 8–12, Neutral 12–16, Poor >16.
+Baja: Excellent <10°/g, Good 10–14, Neutral 14–18, Poor >18. (Long-travel chassis tolerate more roll.)
+Utility: Excellent <12°/g, Good 12–16, Neutral 16–20, Poor >20.
+Example: we treat <6–10°/g as top-tier roll resistance; values above ≈15°/g (seen in some ATVs) are considered poor
+cpsc.gov
+.
+Roll Stiffness Distribution (% front)
+(Share of total roll stiffness at front axle.) 50% yields neutral handling
+cpsc.gov
+. Categorize deviation from 50%:
+Excellent (balanced): 45–55% front.
+Good: 40–45% or 55–60%.
+Neutral: 35–40% or 60–65%.
+Poor: <35% or >65%.
+For example, front stiffness ≈50% yields neutral steering, whereas ~15% or ~55% produced oversteer/understeer in tests
+cpsc.gov
+.
+Lateral Load Transfer (%)
+(Fraction of vehicle weight shifted side-to-side per 1 g lateral acceleration, ≈(CG height)/(track width)×100.) Lower transfer is better (less roll and more contact patch). Sample thresholds:
+Excellent: <30% (i.e. CGH/TW<0.30)
+Good: 30–40%
+Neutral: 40–50%
+Poor: >50%.
+E.g. CGH/TW≈0.4 yields ~40%/g; we consider <30% very good.
+Longitudinal Weight Transfer (%)
+(Fraction of weight shifted front-to-rear per 1 g longitudinal accel/brake, ≈(CG height)/(wheelbase)×100.) Balanced braking/accel is desirable. Thresholds (fraction at 1 g):
+Excellent: <20% (CGH/WB<0.20)
+Good: 20–30%
+Neutral: 30–40%
+Poor: >40%.
+Typical ATV CGH/WB≈0.3–0.4 (i.e. 30–40% at 1 g).
+Bump Travel Usage (%)
+(Portion of available wheel travel used on impacts.) Optimal use is ~60–70%
+store.supashock.com
+. We define:
+Excellent: 60–70%
+Good: 50–60% or 70–80%
+Neutral: 40–50% or 80–90%
+Poor: <40% or >90%.
+This reflects that too little (<50%) wastes potential, while too high (>80%) risks bottoming out. For example, 60–70% bump is “balanced”
+store.supashock.com
+.
+Handling Balance (Steer Bias)
+(Assessed via roll stiffness & lateral transfer distribution front/rear.) Ideal = neutral (50/50); deviations cause under/oversteer
+cpsc.gov
+. We classify by front% (similar to roll distribution above):
+Excellent (Neutral): 45–55% front (nearly equal weight transfer)
+Good: 40–45% or 55–60% (mild bias)
+Neutral: 35–40% or 60–65% (noticeable bias)
+Poor: <35% or >65% (strong bias).
+For example, a front bias >55% yields understeer, <45% yields oversteer
+cpsc.gov
+.
+Ride Quality Score (0–100)
+(A composite comfort index from frequency, damping, etc.) We suggest a 0–100 scale:
+Excellent: 80–100
+Good: 60–80
+Neutral: 40–60
+Poor: <40
+This “score” might average or weight metrics (e.g. ideal 2–3 Hz ride freq, ζ≈0.3–0.6
+ijera.com
+, moderate bump use
+store.supashock.com
+). For instance, perfect comfort yields ≈90+, whereas heavily unsettled ride is low.
+Dashboard Summary (Parameter → Label Mapping)
+To drive an automated summary dashboard (e.g. in Replit), display each metric with its category label. For example, the following JSON snippet maps parameter values to descriptive ranges:
+json
+Copy
+Edit
+{
+  "Ride Frequency (Hz)": {
+    "Excellent": ">3.0",
+    "Good": "2.5-3.0",
+    "Neutral": "2.0-2.5",
+    "Poor": "<2.0"
+  },
+  "Damping Ratio (ζ)": {
+    "Excellent": "0.40-0.60",
+    "Good": "0.30-0.40",
+    "Neutral": "0.20-0.30",
+    "Poor": "<0.20"
+  },
+  "Roll Gradient (deg/g)": {
+    "Excellent": "<6",
+    "Good": "6-10",
+    "Neutral": "10-15",
+    "Poor": ">15"
+  },
+  "Roll Stiffness Dist. (% front)": {
+    "Excellent": "45-55",
+    "Good": "40-45 or 55-60",
+    "Neutral": "35-40 or 60-65",
+    "Poor": "<35 or >65"
+  },
+  "Lateral Load Transfer (%)": {
+    "Excellent": "<30",
+    "Good": "30-40",
+    "Neutral": "40-50",
+    "Poor": ">50"
+  },
+  "Longitudinal Transfer (%)": {
+    "Excellent": "<20",
+    "Good": "20-30",
+    "Neutral": "30-40",
+    "Poor": ">40"
+  },
+  "Bump Travel Usage (%)": {
+    "Excellent": "60-70",
+    "Good": "50-60 or 70-80",
+    "Neutral": "40-50 or 80-90",
+    "Poor": "<40 or >90"
+  },
+  "Handling Balance": {
+    "Excellent": "Front 45-55%",
+    "Good": "Front 40-45% or 55-60%",
+    "Neutral": "Front 35-40% or 60-65%",
+    "Poor": "Front <35% or >65%"
+  },
+  "Ride Quality Score": {
+    "Excellent": "80-100",
+    "Good": "60-80",
+    "Neutral": "40-60",
+    "Poor": "<40"
+  }
+}
+Each parameter’s numeric value can be compared against its thresholds to assign the “Excellent/Good/Neutral/Poor” label, enabling an automated performance summary dashboard.
