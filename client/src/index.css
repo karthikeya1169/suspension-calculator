@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(240, 21%, 15%);
+  --foreground: hsl(240, 9%, 89%);
+  --card: hsl(240, 15%, 17%);
+  --card-foreground: hsl(240, 9%, 89%);
+  --popover: hsl(240, 21%, 15%);
+  --popover-foreground: hsl(240, 9%, 89%);
+  --primary: hsl(183, 50%, 48%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(240, 15%, 22%);
+  --secondary-foreground: hsl(240, 9%, 89%);
+  --muted: hsl(240, 15%, 22%);
+  --muted-foreground: hsl(240, 5%, 72%);
+  --accent: hsl(183, 50%, 48%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(240, 15%, 22%);
+  --input: hsl(240, 15%, 22%);
+  --ring: hsl(183, 50%, 48%);
+  --chart-1: hsl(183, 50%, 48%);
+  --chart-2: hsl(159, 100%, 36%);
+  --chart-3: hsl(42, 93%, 56%);
+  --chart-4: hsl(147, 79%, 42%);
+  --chart-5: hsl(341, 75%, 51%);
+  --sidebar: hsl(240, 15%, 17%);
+  --sidebar-foreground: hsl(240, 9%, 89%);
+  --sidebar-primary: hsl(183, 50%, 48%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(240, 15%, 22%);
+  --sidebar-accent-foreground: hsl(183, 50%, 48%);
+  --sidebar-border: hsl(240, 15%, 22%);
+  --sidebar-ring: hsl(183, 50%, 48%);
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: 'Menlo', monospace;
+  --radius: 0.75rem;
+
+  /* Custom suspension calculator colors */
+  --dark-primary: hsl(240, 21%, 15%);
+  --dark-secondary: hsl(240, 15%, 17%);
+  --dark-tertiary: hsl(240, 15%, 22%);
+  --accent-teal: hsl(183, 50%, 48%);
+  --accent-blue: hsl(208, 73%, 58%);
+  --accent-amber: hsl(42, 93%, 56%);
+  --text-primary: hsl(0, 0%, 100%);
+  --text-secondary: hsl(240, 9%, 89%);
+  --text-muted: hsl(240, 5%, 72%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+
+  /* Custom slider styling */
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: hsl(var(--accent-teal));
+    cursor: pointer;
+    border: 2px solid hsl(var(--dark-secondary));
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .slider::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: hsl(var(--accent-teal));
+    cursor: pointer;
+    border: 2px solid hsl(var(--dark-secondary));
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .slider::-webkit-slider-track {
+    background: hsl(var(--dark-tertiary));
+  }
+
+  .slider::-moz-range-track {
+    background: hsl(var(--dark-tertiary));
+  }
+}
+
+@layer utilities {
+  .bg-dark-primary {
+    background-color: hsl(240, 21%, 15%);
+  }
+  
+  .bg-dark-secondary {
+    background-color: hsl(240, 15%, 17%);
+  }
+  
+  .bg-dark-tertiary {
+    background-color: hsl(240, 15%, 22%);
+  }
+  
+  .bg-accent-teal {
+    background-color: hsl(183, 50%, 48%);
+  }
+  
+  .bg-accent-blue {
+    background-color: hsl(208, 73%, 58%);
+  }
+  
+  .bg-accent-amber {
+    background-color: hsl(42, 93%, 56%);
+  }
+  
+  .text-accent-teal {
+    color: hsl(183, 50%, 48%);
+  }
+  
+  .text-accent-blue {
+    color: hsl(208, 73%, 58%);
+  }
+  
+  .text-accent-amber {
+    color: hsl(42, 93%, 56%);
+  }
+  
+  .text-text-primary {
+    color: hsl(0, 0%, 100%);
+  }
+  
+  .text-text-secondary {
+    color: hsl(240, 9%, 89%);
+  }
+  
+  .text-text-muted {
+    color: hsl(240, 5%, 72%);
+  }
+  
+  .border-dark-tertiary {
+    border-color: hsl(240, 15%, 22%);
+  }
+  
+  .shadow-card {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+  
+  .shadow-card-hover {
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  }
+}

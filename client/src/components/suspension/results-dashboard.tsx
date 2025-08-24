@@ -1,0 +1,250 @@
+import { CalculationResults } from "@/types/suspension";
+import { ResultCard } from "./result-card";
+import { Activity, BarChart3, TrendingUp, ArrowLeftRight, Mountain, Target } from "lucide-react";
+
+interface ResultsDashboardProps {
+  results: CalculationResults | null;
+}
+
+export function ResultsDashboard({ results }: ResultsDashboardProps) {
+  if (!results) {
+    return (
+      <div className="flex-1 overflow-y-auto p-6 bg-dark-primary">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl font-bold text-text-primary mb-8" data-testid="title-calculation-results">
+            Calculation Results
+          </h2>
+          <div className="flex items-center justify-center h-64">
+            <p className="text-text-muted text-lg" data-testid="text-no-results">
+              Enter parameters and click "Calculate Results" to see suspension analysis
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 overflow-y-auto p-6 bg-dark-primary">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-2xl font-bold text-text-primary mb-8" data-testid="title-calculation-results">
+          Calculation Results
+        </h2>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {/* Springs & Damping Card */}
+          <ResultCard
+            title="Springs & Damping"
+            icon={<Activity className="text-accent-teal" size={20} />}
+            accentColor="bg-accent-teal"
+            items={[
+              {
+                label: "Spring Rate Front",
+                value: `${results.springsAndDamping.springRateFront} N/mm`,
+                isHighlight: true
+              },
+              {
+                label: "Spring Rate Rear",
+                value: `${results.springsAndDamping.springRateRear} N/mm`,
+                isHighlight: true
+              },
+              {
+                label: "Wheel Rate Front",
+                value: `${results.springsAndDamping.wheelRateFront} N/mm`
+              },
+              {
+                label: "Wheel Rate Rear",
+                value: `${results.springsAndDamping.wheelRateRear} N/mm`
+              },
+              {
+                label: "Critical Damping Front",
+                value: `${results.springsAndDamping.criticalDampingFront} Ns/m`
+              },
+              {
+                label: "Actual Damping Front",
+                value: `${results.springsAndDamping.actualDampingFront} Ns/m`
+              }
+            ]}
+          />
+
+          {/* Ride & Roll Card */}
+          <ResultCard
+            title="Ride & Roll"
+            icon={<BarChart3 className="text-accent-blue" size={20} />}
+            accentColor="bg-accent-blue"
+            items={[
+              {
+                label: "Natural Frequency Front",
+                value: `${results.rideAndRoll.naturalFrequencyFront} Hz`,
+                isHighlight: true
+              },
+              {
+                label: "Natural Frequency Rear",
+                value: `${results.rideAndRoll.naturalFrequencyRear} Hz`,
+                isHighlight: true
+              },
+              {
+                label: "Roll Stiffness Total",
+                value: `${results.rideAndRoll.rollStiffnessTotal} Nm/deg`
+              },
+              {
+                label: "Roll Gradient",
+                value: `${results.rideAndRoll.rollGradient} deg/g`
+              },
+              {
+                label: "Roll Stiffness Dist",
+                value: results.rideAndRoll.rollStiffnessDist
+              }
+            ]}
+          />
+
+          {/* Cornering Card */}
+          <ResultCard
+            title="Cornering @ 1.0g"
+            icon={<TrendingUp className="text-accent-amber" size={20} />}
+            accentColor="bg-accent-amber"
+            items={[
+              {
+                label: "Load Transfer Front",
+                value: `${results.cornering.loadTransferFront} kg`,
+                isHighlight: true
+              },
+              {
+                label: "Load Transfer Rear",
+                value: `${results.cornering.loadTransferRear} kg`,
+                isHighlight: true
+              },
+              {
+                label: "Outside Front Load",
+                value: `${results.cornering.outsideFrontLoad} kg`
+              },
+              {
+                label: "Outside Rear Load",
+                value: `${results.cornering.outsideRearLoad} kg`
+              },
+              {
+                label: "Inside Front Load",
+                value: `${results.cornering.insideFrontLoad} kg`
+              },
+              {
+                label: "Inside Rear Load",
+                value: `${results.cornering.insideRearLoad} kg`
+              }
+            ]}
+          />
+
+          {/* Longitudinal Card */}
+          <ResultCard
+            title="Longitudinal"
+            icon={<ArrowLeftRight className="text-accent-teal" size={20} />}
+            accentColor="bg-accent-teal"
+            items={[
+              {
+                label: "Accel Weight Transfer",
+                value: `${results.longitudinal.accelWeightTransfer} kg`,
+                isHighlight: true
+              },
+              {
+                label: "Braking Weight Transfer",
+                value: `${results.longitudinal.brakingWeightTransfer} kg`,
+                isHighlight: true
+              },
+              {
+                label: "Front Load (Accel)",
+                value: `${results.longitudinal.frontLoadAccel} kg`
+              },
+              {
+                label: "Rear Load (Accel)",
+                value: `${results.longitudinal.rearLoadAccel} kg`
+              },
+              {
+                label: "Front Load (Braking)",
+                value: `${results.longitudinal.frontLoadBraking} kg`
+              },
+              {
+                label: "Rear Load (Braking)",
+                value: `${results.longitudinal.rearLoadBraking} kg`
+              }
+            ]}
+          />
+
+          {/* Bump Response Card */}
+          <ResultCard
+            title="Bump Response"
+            icon={<Mountain className="text-accent-blue" size={20} />}
+            accentColor="bg-accent-blue"
+            items={[
+              {
+                label: "Spring Force",
+                value: `${results.bumpResponse.springForce} N`,
+                isHighlight: true
+              },
+              {
+                label: "Damper Force",
+                value: `${results.bumpResponse.damperForce} N`,
+                isHighlight: true
+              },
+              {
+                label: "Total Wheel Force",
+                value: `${results.bumpResponse.totalWheelForce} N`
+              },
+              {
+                label: "Contact Patch Load",
+                value: `${results.bumpResponse.contactPatchLoad} kg`
+              },
+              {
+                label: "Load Variation",
+                value: results.bumpResponse.loadVariation
+              }
+            ]}
+          />
+
+          {/* Performance Summary Card */}
+          <div className="lg:col-span-2 xl:col-span-1">
+            <div className="bg-dark-secondary rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 bg-accent-amber bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                  <Target className="text-accent-amber" size={20} />
+                </div>
+                <h3 className="text-lg font-semibold text-text-primary" data-testid="title-performance-summary">
+                  Performance Summary
+                </h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-text-secondary" data-testid="label-ride-quality-score">Ride Quality Score</span>
+                  <span className="font-mono text-accent-teal text-lg font-semibold" data-testid="value-ride-quality-score">
+                    {results.performanceSummary.rideQualityScore}/10
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-text-secondary" data-testid="label-handling-balance">Handling Balance</span>
+                  <span className="font-mono text-accent-teal" data-testid="value-handling-balance">
+                    {results.performanceSummary.handlingBalance}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-text-secondary" data-testid="label-roll-compliance">Roll Compliance</span>
+                  <span className="font-mono text-text-secondary" data-testid="value-roll-compliance">
+                    {results.performanceSummary.rollCompliance}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-text-secondary" data-testid="label-bump-compliance">Bump Compliance</span>
+                  <span className="font-mono text-text-secondary" data-testid="value-bump-compliance">
+                    {results.performanceSummary.bumpCompliance}
+                  </span>
+                </div>
+                <div className="bg-dark-tertiary rounded-lg p-3 mt-4">
+                  <p className="text-sm text-text-muted" data-testid="text-recommendation">
+                    {results.performanceSummary.recommendation}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
