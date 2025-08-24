@@ -299,6 +299,7 @@ export function calculateSuspension(inputs: SuspensionInputs): CalculationResult
       rollStiffnessDist: `${Math.round(frontRollPercent)}% F / ${Math.round(100 - frontRollPercent)}% R`
     },
     cornering: {
+      lateralAcceleration: scenarios.lateralAccel,
       loadTransferFront: Math.round(dWF / G * 10) / 10,
       loadTransferRear: Math.round(dWR / G * 10) / 10,
       outsideFrontLoad: Math.round(wfOutside / G * 10) / 10,

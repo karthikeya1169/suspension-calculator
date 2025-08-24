@@ -52,6 +52,7 @@ export interface CalculationResults {
     rollStiffnessDist: string;
   };
   cornering: {
+    lateralAcceleration: number;
     loadTransferFront: number;
     loadTransferRear: number;
     outsideFrontLoad: number;

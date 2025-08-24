@@ -130,7 +130,7 @@ export function ResultsDashboard({ results, isMobile = false, onExportToWord }: 
 
           {/* Cornering Card */}
           <ResultCard
-            title="Cornering @ 1.0g"
+            title={`Cornering @ ${results.cornering.lateralAcceleration}g`}
             icon={<TrendingUp className="text-accent-amber" size={20} />}
             accentColor="bg-accent-amber"
             items={[
