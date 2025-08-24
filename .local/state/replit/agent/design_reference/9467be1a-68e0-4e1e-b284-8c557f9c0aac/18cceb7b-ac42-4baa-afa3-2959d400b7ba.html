@@ -1,0 +1,577 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suspension Calculator Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-primary': '#1E1E2F',
+                        'dark-secondary': '#2A2A3B',
+                        'dark-tertiary': '#363650',
+                        'accent-teal': '#3AB4B8',
+                        'accent-blue': '#4A90E2',
+                        'accent-amber': '#E3A14A',
+                        'text-primary': '#FFFFFF',
+                        'text-secondary': '#EDEDED',
+                        'text-muted': '#B8B8C8'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',
+                        'card-hover': '0 8px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2)'
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-dark-primary text-text-secondary font-inter min-h-screen">
+    <!-- @COMPONENT: AppHeader [title and navigation] -->
+    <header class="bg-dark-secondary border-b border-dark-tertiary px-6 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-accent-teal rounded-lg flex items-center justify-center">
+                    <i class="fas fa-car text-text-primary text-sm"></i>
+                </div>
+                <h1 class="text-xl font-bold text-text-primary">Suspension Calculator Pro</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="px-4 py-2 bg-accent-teal text-text-primary rounded-lg hover:bg-opacity-80 transition-colors">
+                    <i class="fas fa-save mr-2"></i>Save Configuration
+                </button>
+                <button class="px-4 py-2 bg-dark-tertiary text-text-secondary rounded-lg hover:bg-opacity-80 transition-colors">
+                    <i class="fas fa-download mr-2"></i>Export Results
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: AppHeader -->
+
+    <div class="flex h-screen">
+        <!-- @COMPONENT: InputSidebar [collapsible input sections] -->
+        <div class="w-80 bg-dark-secondary border-r border-dark-tertiary overflow-y-auto">
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-text-primary mb-6">Input Parameters</h2>
+                
+                <!-- Vehicle Setup Section -->
+                <div class="mb-6">
+                    <button class="w-full flex items-center justify-between p-4 bg-dark-tertiary rounded-lg hover:bg-opacity-80 transition-colors" data-event="click:toggleSection" data-implementation="Toggle Vehicle Setup section">
+                        <span class="font-medium text-text-primary">
+                            <i class="fas fa-car mr-3 text-accent-teal"></i>Vehicle Setup
+                        </span>
+                        <i class="fas fa-chevron-down text-text-muted transition-transform" id="vehicle-chevron"></i>
+                    </button>
+                    
+                    <div class="mt-3 space-y-4" id="vehicle-section">
+                        <div class="bg-dark-primary p-4 rounded-lg space-y-4">
+                            <!-- Vehicle Mass -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-secondary mb-2">Vehicle Mass (kg)</label>
+                                <input type="number" value="1500" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="vehicle.mass">
+                            </div>
+                            
+                            <!-- Weight Distribution Slider -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-secondary mb-2">Front/Rear Weight Distribution (%)</label>
+                                <div class="relative">
+                                    <input type="range" min="40" max="70" value="60" class="w-full h-2 bg-dark-tertiary rounded-lg appearance-none cursor-pointer slider" data-bind="vehicle.weightDistribution">
+                                    <div class="flex justify-between text-xs text-text-muted mt-1">
+                                        <span>40%</span>
+                                        <span data-bind="vehicle.weightDistribution">60%</span>
+                                        <span>70%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Sprung Mass Fraction -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-secondary mb-2">Sprung Mass Fraction</label>
+                                <input type="number" step="0.01" min="0" max="1" value="0.85" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="vehicle.sprungMassFraction">
+                            </div>
+                            
+                            <!-- CG Height -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-secondary mb-2">CG Height (m)</label>
+                                <input type="number" step="0.01" value="0.52" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="vehicle.cgHeight">
+                            </div>
+                            
+                            <!-- Wheelbase -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-secondary mb-2">Wheelbase (m)</label>
+                                <input type="number" step="0.01" value="2.65" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="vehicle.wheelbase">
+                            </div>
+                            
+                            <!-- Track Widths -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Front Track (m)</label>
+                                    <input type="number" step="0.01" value="1.55" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="vehicle.frontTrack">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Rear Track (m)</label>
+                                    <input type="number" step="0.01" value="1.52" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="vehicle.rearTrack">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suspension Setup Section -->
+                <div class="mb-6">
+                    <button class="w-full flex items-center justify-between p-4 bg-dark-tertiary rounded-lg hover:bg-opacity-80 transition-colors" data-event="click:toggleSection" data-implementation="Toggle Suspension Setup section">
+                        <span class="font-medium text-text-primary">
+                            <i class="fas fa-cogs mr-3 text-accent-blue"></i>Suspension Setup
+                        </span>
+                        <i class="fas fa-chevron-down text-text-muted transition-transform" id="suspension-chevron"></i>
+                    </button>
+                    
+                    <div class="mt-3 space-y-4" id="suspension-section">
+                        <div class="bg-dark-primary p-4 rounded-lg space-y-4">
+                            <!-- Motion Ratios -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Front Motion Ratio</label>
+                                    <input type="number" step="0.01" value="0.75" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.frontMotionRatio">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Rear Motion Ratio</label>
+                                    <input type="number" step="0.01" value="0.80" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.rearMotionRatio">
+                                </div>
+                            </div>
+                            
+                            <!-- Ride Frequencies -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Front Ride Freq (Hz)</label>
+                                    <input type="number" step="0.1" value="1.2" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.frontRideFreq">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Rear Ride Freq (Hz)</label>
+                                    <input type="number" step="0.1" value="1.4" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.rearRideFreq">
+                                </div>
+                            </div>
+                            
+                            <!-- Damping Ratios -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Front Damping Ratio (ζ)</label>
+                                    <input type="number" step="0.01" value="0.3" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.frontDampingRatio">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Rear Damping Ratio (ζ)</label>
+                                    <input type="number" step="0.01" value="0.3" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.rearDampingRatio">
+                                </div>
+                            </div>
+                            
+                            <!-- Anti-Roll Bar Stiffness -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">ARB Front (Nm/rad)</label>
+                                    <input type="number" value="15000" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.arbFront">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">ARB Rear (Nm/rad)</label>
+                                    <input type="number" value="12000" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.arbRear">
+                                </div>
+                            </div>
+                            
+                            <!-- Unsprung Mass -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Unsprung Mass Front (kg/corner)</label>
+                                    <input type="number" value="45" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.unsprungMassFront">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Unsprung Mass Rear (kg/corner)</label>
+                                    <input type="number" value="40" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="suspension.unsprungMassRear">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Driving Scenarios Section -->
+                <div class="mb-6">
+                    <button class="w-full flex items-center justify-between p-4 bg-dark-tertiary rounded-lg hover:bg-opacity-80 transition-colors" data-event="click:toggleSection" data-implementation="Toggle Driving Scenarios section">
+                        <span class="font-medium text-text-primary">
+                            <i class="fas fa-road mr-3 text-accent-amber"></i>Driving Scenarios
+                        </span>
+                        <i class="fas fa-chevron-down text-text-muted transition-transform" id="scenarios-chevron"></i>
+                    </button>
+                    
+                    <div class="mt-3 space-y-4" id="scenarios-section">
+                        <div class="bg-dark-primary p-4 rounded-lg space-y-4">
+                            <!-- Cornering Lateral Acceleration -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-secondary mb-2">Cornering Lateral Acceleration (g)</label>
+                                <input type="number" step="0.1" value="1.0" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="scenarios.lateralAccel">
+                            </div>
+                            
+                            <!-- Longitudinal Accelerations -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Longitudinal Accel (g)</label>
+                                    <input type="number" step="0.1" value="0.8" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="scenarios.longAccel">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Braking Decel (g)</label>
+                                    <input type="number" step="0.1" value="1.2" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="scenarios.brakingDecel">
+                                </div>
+                            </div>
+                            
+                            <!-- Bump Parameters -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Bump Travel (m)</label>
+                                    <input type="number" step="0.01" value="0.05" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="scenarios.bumpTravel">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">Bump Velocity (m/s)</label>
+                                    <input type="number" step="0.1" value="1.0" class="w-full px-3 py-2 bg-dark-tertiary border border-dark-tertiary rounded-lg text-text-secondary focus:border-accent-teal focus:outline-none transition-colors" data-bind="scenarios.bumpVelocity">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="w-full py-3 bg-accent-teal text-text-primary rounded-lg font-medium hover:bg-opacity-80 transition-colors" data-event="click:calculateResults" data-implementation="Trigger calculation of all suspension parameters">
+                    <i class="fas fa-calculator mr-2"></i>Calculate Results
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: InputSidebar -->
+
+        <!-- @COMPONENT: ResultsDashboard [calculation results display] -->
+        <div class="flex-1 overflow-y-auto p-6 bg-dark-primary">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-2xl font-bold text-text-primary mb-8">Calculation Results</h2>
+                
+                <!-- Results Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    
+                    <!-- Springs & Damping Card -->
+                    <div class="bg-dark-secondary rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-accent-teal bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-spring text-accent-teal"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-text-primary">Springs & Damping</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Spring Rate Front</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">32.5 N/mm</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Spring Rate Rear</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">28.3 N/mm</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Wheel Rate Front</span>
+                                <span class="font-mono text-text-primary" data-mock="true">18.3 N/mm</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Wheel Rate Rear</span>
+                                <span class="font-mono text-text-primary" data-mock="true">18.1 N/mm</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Critical Damping Front</span>
+                                <span class="font-mono text-text-primary" data-mock="true">2840 Ns/m</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Actual Damping Front</span>
+                                <span class="font-mono text-text-primary" data-mock="true">852 Ns/m</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ride & Roll Card -->
+                    <div class="bg-dark-secondary rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-accent-blue bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-wave-square text-accent-blue"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-text-primary">Ride & Roll</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Natural Frequency Front</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">1.2 Hz</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Natural Frequency Rear</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">1.4 Hz</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Roll Stiffness Total</span>
+                                <span class="font-mono text-text-primary" data-mock="true">1847 Nm/deg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Roll Gradient</span>
+                                <span class="font-mono text-text-primary" data-mock="true">2.94 deg/g</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Roll Stiffness Dist</span>
+                                <span class="font-mono text-text-primary" data-mock="true">58% F / 42% R</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cornering Card -->
+                    <div class="bg-dark-secondary rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-accent-amber bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-route text-accent-amber"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-text-primary">Cornering @ 1.0g</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Load Transfer Front</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">245 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Load Transfer Rear</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">178 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Outside Front Load</span>
+                                <span class="font-mono text-text-primary" data-mock="true">695 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Outside Rear Load</span>
+                                <span class="font-mono text-text-primary" data-mock="true">478 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Inside Front Load</span>
+                                <span class="font-mono text-text-primary" data-mock="true">205 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Inside Rear Load</span>
+                                <span class="font-mono text-text-primary" data-mock="true">122 kg</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Longitudinal Card -->
+                    <div class="bg-dark-secondary rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-accent-teal bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-arrows-alt-h text-accent-teal"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-text-primary">Longitudinal</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Accel Weight Transfer</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">314 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Braking Weight Transfer</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">471 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Front Load (Accel)</span>
+                                <span class="font-mono text-text-primary" data-mock="true">586 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Rear Load (Accel)</span>
+                                <span class="font-mono text-text-primary" data-mock="true">914 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Front Load (Braking)</span>
+                                <span class="font-mono text-text-primary" data-mock="true">1371 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Rear Load (Braking)</span>
+                                <span class="font-mono text-text-primary" data-mock="true">129 kg</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bump Response Card -->
+                    <div class="bg-dark-secondary rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-accent-blue bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-mountain text-accent-blue"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-text-primary">Bump Response</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Spring Force</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">915 N</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Damper Force</span>
+                                <span class="font-mono text-accent-amber" data-mock="true">852 N</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Total Wheel Force</span>
+                                <span class="font-mono text-text-primary" data-mock="true">1767 N</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Contact Patch Load</span>
+                                <span class="font-mono text-text-primary" data-mock="true">180 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Load Variation</span>
+                                <span class="font-mono text-text-primary" data-mock="true">+18%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Summary Card -->
+                    <div class="bg-dark-secondary rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6 lg:col-span-2 xl:col-span-1">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-accent-amber bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-chart-line text-accent-amber"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-text-primary">Performance Summary</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Ride Quality Score</span>
+                                <span class="font-mono text-accent-teal text-lg font-semibold" data-mock="true">8.2/10</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Handling Balance</span>
+                                <span class="font-mono text-accent-teal" data-mock="true">Neutral</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Roll Compliance</span>
+                                <span class="font-mono text-text-secondary" data-mock="true">Good</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Bump Compliance</span>
+                                <span class="font-mono text-text-secondary" data-mock="true">Excellent</span>
+                            </div>
+                            <div class="bg-dark-tertiary rounded-lg p-3 mt-4">
+                                <p class="text-sm text-text-muted" data-mock="true">
+                                    Suspension setup shows good balance between ride comfort and handling. Consider slight increase in rear ARB for improved turn-in response.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: ResultsDashboard -->
+    </div>
+
+    <style>
+        /* Custom slider styling */
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #3AB4B8;
+            cursor: pointer;
+            border: 2px solid #2A2A3B;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #3AB4B8;
+            cursor: pointer;
+            border: 2px solid #2A2A3B;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-webkit-slider-track {
+            background: #363650;
+        }
+
+        .slider::-moz-range-track {
+            background: #363650;
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+
+    <script>
+        // TODO: Implement business logic, API calls, and state management
+        (function() {
+            // Simple section toggle functionality for demonstration
+            const toggleButtons = document.querySelectorAll('[data-event="click:toggleSection"]');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const section = this.nextElementSibling;
+                    const chevron = this.querySelector('i[id$="-chevron"]');
+                    
+                    if (section.style.display === 'none' || section.style.display === '') {
+                        section.style.display = 'block';
+                        chevron.style.transform = 'rotate(180deg)';
+                    } else {
+                        section.style.display = 'none';
+                        chevron.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+
+            // Initialize all sections as open
+            document.addEventListener('DOMContentLoaded', function() {
+                const sections = ['vehicle-section', 'suspension-section', 'scenarios-section'];
+                sections.forEach(id => {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        section.style.display = 'block';
+                    }
+                });
+            });
+
+            // Slider value update demonstration
+            const sliders = document.querySelectorAll('input[type="range"]');
+            sliders.forEach(slider => {
+                slider.addEventListener('input', function() {
+                    const valueDisplay = this.parentElement.querySelector('[data-bind]');
+                    if (valueDisplay && valueDisplay.getAttribute('data-bind') === 'vehicle.weightDistribution') {
+                        valueDisplay.textContent = this.value + '%';
+                    }
+                });
+            });
+
+            // Calculate button demonstration
+            const calculateButton = document.querySelector('[data-event="click:calculateResults"]');
+            if (calculateButton) {
+                calculateButton.addEventListener('click', function() {
+                    // Add loading state
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Calculating...';
+                    this.disabled = true;
+                    
+                    // Simulate calculation time
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-calculator mr-2"></i>Calculate Results';
+                        this.disabled = false;
+                        
+                        // Add visual feedback that calculation is complete
+                        const cards = document.querySelectorAll('.bg-dark-secondary');
+                        cards.forEach(card => {
+                            card.style.borderLeft = '4px solid #3AB4B8';
+                            setTimeout(() => {
+                                card.style.borderLeft = 'none';
+                            }, 2000);
+                        });
+                    }, 1500);
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
