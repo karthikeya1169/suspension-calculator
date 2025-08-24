@@ -35,8 +35,7 @@ SuspensionCalc/
 │── .gitignore
 
 yaml
-Copy
-Edit
+
 
 ---
 
